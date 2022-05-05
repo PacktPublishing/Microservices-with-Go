@@ -1,0 +1,14 @@
+syntax = "proto3";
+option go_package = "/gen";
+
+message Metadata {
+    string id = 1;
+    string title = 2;
+    string description = 3;
+    string director = 4;
+}
+
+message MovieDetails {
+    float rating = 1;
+    Metadata metadata = 2;
+}
