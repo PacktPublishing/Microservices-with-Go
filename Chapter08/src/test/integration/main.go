@@ -8,13 +8,13 @@ import (
 	"github.com/google/go-cmp/cmp"
 	"github.com/google/go-cmp/cmp/cmpopts"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 	"movieexample.com/gen"
 	metadatatest "movieexample.com/metadata/pkg/testutil"
 	movietest "movieexample.com/movie/pkg/testutil"
 	"movieexample.com/pkg/discovery"
 	"movieexample.com/pkg/discovery/memory"
 	ratingtest "movieexample.com/rating/pkg/testutil"
-	"google.golang.org/grpc/credentials/insecure"
 )
 
 const (
@@ -49,7 +49,7 @@ func main() {
 	}
 	defer metadataConn.Close()
 	metadataClient := gen.NewMetadataServiceClient(metadataConn)
-	
+
 	ratingConn, err := grpc.Dial(ratingServiceAddr, opts)
 	if err != nil {
 		panic(err)
@@ -87,7 +87,7 @@ func main() {
 		log.Fatalf("get metadata after put mismatch: %v", diff)
 	}
 
-	log.Println("Saving test metadata via movie service")
+	log.Println("Getting movie details via movie service")
 
 	wantMovieDetails := &gen.MovieDetails{
 		Metadata: m,
@@ -154,6 +154,17 @@ func main() {
 	wantRating := float64((firstRating + secondRating) / 2)
 	if got, want := getAggregatedRatingResp.RatingValue, wantRating; got != want {
 		log.Fatalf("rating mismatch: got %v want %v", got, want)
+	}
+
+	log.Println("Getting updated movie details via movie service")
+
+	getMovieDetailsResp, err = movieClient.GetMovieDetails(ctx, &gen.GetMovieDetailsRequest{MovieId: m.Id})
+	if err != nil {
+		log.Fatalf("get movie details: %v", err)
+	}
+	wantMovieDetails.Rating = wantRating
+	if diff := cmp.Diff(getMovieDetailsResp.MovieDetails, wantMovieDetails, cmpopts.IgnoreUnexported(gen.MovieDetails{}, gen.Metadata{})); diff != "" {
+		log.Fatalf("get movie details after update mismatch: %v", err)
 	}
 
 	log.Println("Integration test execution successful")
