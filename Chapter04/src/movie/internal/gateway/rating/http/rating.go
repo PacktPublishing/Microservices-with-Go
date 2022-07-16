@@ -4,6 +4,8 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"log"
+	"math/rand"
 	"net/http"
 
 	"movieexample.com/movie/internal/gateway"
@@ -27,7 +29,9 @@ func (g *Gateway) GetAggregatedRating(ctx context.Context, recordID model.Record
 	if err != nil {
 		return 0, err
 	}
-	req, err := http.NewRequest(http.MethodGet, addrs[0]+"/rating", nil)
+	url := "http://" + addrs[rand.Intn(len(addrs))] + "/rating"
+	log.Printf("Calling rating service. Request: GET " + url)
+	req, err := http.NewRequest(http.MethodGet, url, nil)
 	if err != nil {
 		return 0, err
 	}
@@ -59,6 +63,8 @@ func (g *Gateway) PutRating(ctx context.Context, recordID model.RecordID, record
 	if err != nil {
 		return err
 	}
+	url := "http://" + addrs[rand.Intn(len(addrs))] + "/ratng"
+	log.Printf("Calling rating service. Request: PUT " + url)
 	req, err := http.NewRequest(http.MethodPut, addrs[0]+"/rating", nil)
 	if err != nil {
 		return err

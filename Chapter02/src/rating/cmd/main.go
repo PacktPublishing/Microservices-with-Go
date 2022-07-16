@@ -4,7 +4,7 @@ import (
 	"log"
 	"net/http"
 
-	"movieexample.com/rating/internal/controller"
+	"movieexample.com/rating/internal/controller/rating"
 	httphandler "movieexample.com/rating/internal/handler/http"
 	"movieexample.com/rating/internal/repository/memory"
 )
@@ -12,8 +12,10 @@ import (
 func main() {
 	log.Println("Starting the rating service")
 	repo := memory.New()
-	svc := controller.New(repo)
-	h := httphandler.New(svc)
+	ctrl := rating.New(repo)
+	h := httphandler.New(ctrl)
 	http.Handle("/rating", http.HandlerFunc(h.Handle))
-	http.ListenAndServe(":8082", nil)
+	if err := http.ListenAndServe(":8082", nil); err != nil {
+		panic(err)
+	}
 }

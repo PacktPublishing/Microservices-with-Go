@@ -1,0 +1,21 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rating
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: rating
+  template:
+    metadata:
+      labels:
+        app: rating
+    spec:
+      containers:
+      - name: rating
+        image: ashuiskov/rating:1.0.3
+        imagePullPolicy: IfNotPresent
+        ports:
+          - containerPort: 8082

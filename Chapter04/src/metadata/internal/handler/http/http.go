@@ -6,29 +6,29 @@ import (
 	"log"
 	"net/http"
 
-	"movieexample.com/metadata/internal/controller"
+	"movieexample.com/metadata/internal/controller/metadata"
 	"movieexample.com/metadata/internal/repository"
 )
 
 // Handler defines a movie metadata HTTP handler.
 type Handler struct {
-	svc *controller.MetadataService
+	ctrl *metadata.Controller
 }
 
 // New creates a new movie metadata HTTP handler.
-func New(svc *controller.MetadataService) *Handler {
-	return &Handler{svc}
+func New(ctrl *metadata.Controller) *Handler {
+	return &Handler{ctrl}
 }
 
-// GetMetadataByID handles GET /metadata requests.
-func (h *Handler) GetMetadataByID(w http.ResponseWriter, req *http.Request) {
+// GetMetadata handles GET /metadata requests.
+func (h *Handler) GetMetadata(w http.ResponseWriter, req *http.Request) {
 	id := req.FormValue("id")
 	if id == "" {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 	ctx := req.Context()
-	m, err := h.svc.Get(ctx, id)
+	m, err := h.ctrl.Get(ctx, id)
 	if err != nil && errors.Is(err, repository.ErrNotFound) {
 		w.WriteHeader(http.StatusNotFound)
 		return

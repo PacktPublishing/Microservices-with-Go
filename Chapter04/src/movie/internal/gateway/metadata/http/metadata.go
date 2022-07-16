@@ -4,6 +4,8 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"log"
+	"math/rand"
 	"net/http"
 
 	"movieexample.com/metadata/pkg/model"
@@ -27,7 +29,9 @@ func (g *Gateway) Get(ctx context.Context, id string) (*model.Metadata, error) {
 	if err != nil {
 		return nil, err
 	}
-	req, err := http.NewRequest(http.MethodGet, addrs[0]+"/metadata", nil)
+	url := "http://" + addrs[rand.Intn(len(addrs))] + "/metadata"
+	log.Printf("Calling metadata service. Request: GET " + url)
+	req, err := http.NewRequest(http.MethodGet, url, nil)
 	if err != nil {
 		return nil, err
 	}

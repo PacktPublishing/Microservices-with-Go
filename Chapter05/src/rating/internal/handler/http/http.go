@@ -7,18 +7,18 @@ import (
 	"net/http"
 	"strconv"
 
-	"movieexample.com/rating/internal/controller"
+	"movieexample.com/rating/internal/controller/rating"
 	"movieexample.com/rating/pkg/model"
 )
 
 // Handler defines a HTTP rating handler.
 type Handler struct {
-	svc *controller.RatingService
+	ctrl *rating.Controller
 }
 
-// New creates a new movie metadata HTTP handler.
-func New(svc *controller.RatingService) *Handler {
-	return &Handler{svc}
+// New creates a new rating service HTTP handler.
+func New(ctrl *rating.Controller) *Handler {
+	return &Handler{ctrl}
 }
 
 // Handle handles PUT and GET /rating requests.
@@ -28,16 +28,15 @@ func (h *Handler) Handle(w http.ResponseWriter, req *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	typeInt, err := strconv.Atoi(req.FormValue("type"))
-	if err != nil {
+	recordType := model.RecordType(req.FormValue("type"))
+	if recordType == "" {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	recordType := model.RecordType(typeInt)
 	switch req.Method {
 	case http.MethodGet:
-		v, err := h.svc.GetAggregatedRating(req.Context(), recordID, recordType)
-		if err != nil && errors.Is(err, controller.ErrNotFound) {
+		v, err := h.ctrl.GetAggregatedRating(req.Context(), recordID, recordType)
+		if err != nil && errors.Is(err, rating.ErrNotFound) {
 			w.WriteHeader(http.StatusNotFound)
 			return
 		}
@@ -51,7 +50,7 @@ func (h *Handler) Handle(w http.ResponseWriter, req *http.Request) {
 			w.WriteHeader(http.StatusBadRequest)
 			return
 		}
-		if err := h.svc.PutRating(req.Context(), recordID, recordType, &model.Rating{UserID: userID, Value: model.RatingValue(v)}); err != nil {
+		if err := h.ctrl.PutRating(req.Context(), recordID, recordType, &model.Rating{UserID: userID, Value: model.RatingValue(v)}); err != nil {
 			log.Printf("Repository put error: %v\n", err)
 			w.WriteHeader(http.StatusInternalServerError)
 		}

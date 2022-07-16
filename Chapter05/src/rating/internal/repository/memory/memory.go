@@ -3,42 +3,36 @@ package memory
 import (
 	"context"
 
+	"movieexample.com/rating/internal/repository"
 	"movieexample.com/rating/pkg/model"
 )
 
-// Repository defines a memory movie matadata repository.
+// Repository defines a rating repository.
 type Repository struct {
-	data map[model.RecordType]map[model.RecordID]map[model.UserID]model.RatingValue
+	data map[model.RecordType]map[model.RecordID][]model.Rating
 }
 
 // New creates a new memory repository.
 func New() *Repository {
-	return &Repository{map[model.RecordType]map[model.RecordID]map[model.UserID]model.RatingValue{}}
+	return &Repository{map[model.RecordType]map[model.RecordID][]model.Rating{}}
 }
 
-// Get retrieves movie metadata for by movie id.
-func (r *Repository) GetAll(ctx context.Context, recordID model.RecordID, recordType model.RecordType) ([]*model.Rating, error) {
+// Get retrieves all ratings for a given record.
+func (r *Repository) Get(ctx context.Context, recordID model.RecordID, recordType model.RecordType) ([]model.Rating, error) {
 	if _, ok := r.data[recordType]; !ok {
-		return []*model.Rating{}, nil
+		return nil, repository.ErrNotFound
 	}
-	if _, ok := r.data[recordType][recordID]; !ok {
-		return []*model.Rating{}, nil
+	if ratings, ok := r.data[recordType][recordID]; !ok || len(ratings) == 0 {
+		return nil, repository.ErrNotFound
 	}
-	var res []*model.Rating
-	for userID, value := range r.data[recordType][recordID] {
-		res = append(res, &model.Rating{UserID: userID, Value: value})
-	}
-	return res, nil
+	return r.data[recordType][recordID], nil
 }
 
 // Put adds a rating for a given record.
 func (r *Repository) Put(ctx context.Context, recordID model.RecordID, recordType model.RecordType, rating *model.Rating) error {
 	if _, ok := r.data[recordType]; !ok {
-		r.data[recordType] = map[model.RecordID]map[model.UserID]model.RatingValue{}
+		r.data[recordType] = map[model.RecordID][]model.Rating{}
 	}
-	if _, ok := r.data[recordType][recordID]; !ok {
-		r.data[recordType][recordID] = map[model.UserID]model.RatingValue{}
-	}
-	r.data[recordType][recordID][rating.UserID] = rating.Value
+	r.data[recordType][recordID] = append(r.data[recordType][recordID], *rating)
 	return nil
 }

@@ -4,7 +4,7 @@ import (
 	"log"
 	"net/http"
 
-	"movieexample.com/metadata/internal/controller"
+	"movieexample.com/metadata/internal/controller/metadata"
 	httphandler "movieexample.com/metadata/internal/handler/http"
 	"movieexample.com/metadata/internal/repository/memory"
 )
@@ -12,8 +12,10 @@ import (
 func main() {
 	log.Println("Starting the movie metadata service")
 	repo := memory.New()
-	svc := controller.New(repo)
-	h := httphandler.New(svc)
-	http.Handle("/metadata", http.HandlerFunc(h.GetMetadataByID))
-	http.ListenAndServe(":8081", nil)
+	ctrl := metadata.New(repo)
+	h := httphandler.New(ctrl)
+	http.Handle("/metadata", http.HandlerFunc(h.GetMetadata))
+	if err := http.ListenAndServe(":8081", nil); err != nil {
+		panic(err)
+	}
 }
