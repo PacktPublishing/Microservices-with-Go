@@ -1,0 +1,4 @@
+api:
+  port: 8083
+jaeger:
+  url: http://localhost:14268/api/traces
