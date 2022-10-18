@@ -25,7 +25,7 @@ func New() (*Repository, error) {
 
 // Get retrieves all ratings for a given record.
 func (r *Repository) Get(ctx context.Context, recordID model.RecordID, recordType model.RecordType) ([]model.Rating, error) {
-	rows, err := r.db.Query("SELECT user_id, value FROM ratings WHERE record_id = ? AND record_type = ?", recordID, recordType)
+	rows, err := r.db.QueryContext(ctx, "SELECT user_id, value FROM ratings WHERE record_id = ? AND record_type = ?", recordID, recordType)
 	if err != nil {
 		return nil, err
 	}
@@ -50,7 +50,7 @@ func (r *Repository) Get(ctx context.Context, recordID model.RecordID, recordTyp
 
 // Put adds a rating for a given record.
 func (r *Repository) Put(ctx context.Context, recordID model.RecordID, recordType model.RecordType, rating *model.Rating) error {
-	_, err := r.db.Exec("INSERT INTO ratings (record_id, record_type, user_id, value) VALUES (?, ?, ?, ?)",
+	_, err := r.db.ExecContext(ctx, "INSERT INTO ratings (record_id, record_type, user_id, value) VALUES (?, ?, ?, ?)",
 		recordID, recordType, rating.UserID, rating.Value)
 	return err
 }

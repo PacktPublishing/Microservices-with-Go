@@ -27,7 +27,7 @@ func New() (*Repository, error) {
 // Get retrieves movie metadata for by movie id.
 func (r *Repository) Get(ctx context.Context, id string) (*model.Metadata, error) {
 	var title, description, director string
-	row := r.db.QueryRow("SELECT title, description, director FROM movies WHERE id = ?", id)
+	row := r.db.QueryRowContext(ctx, "SELECT title, description, director FROM movies WHERE id = ?", id)
 	if err := row.Scan(&title, &description, &director); err != nil {
 		if err == sql.ErrNoRows {
 			return nil, repository.ErrNotFound
@@ -44,7 +44,7 @@ func (r *Repository) Get(ctx context.Context, id string) (*model.Metadata, error
 
 // Put adds movie metadata for a given movie id.
 func (r *Repository) Put(ctx context.Context, id string, metadata *model.Metadata) error {
-	_, err := r.db.Exec("INSERT INTO movies (id, title, description, director) VALUES (?, ?, ?, ?)",
+	_, err := r.db.ExecContext(ctx, "INSERT INTO movies (id, title, description, director) VALUES (?, ?, ?, ?)",
 		id, metadata.Title, metadata.Description, metadata.Director)
 	return err
 }
