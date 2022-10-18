@@ -4,7 +4,8 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"rating/pkg/model"
+	"log"
+	"time"
 
 	"github.com/confluentinc/confluent-kafka-go/kafka"
 	"movieexample.com/rating/pkg/model"
@@ -12,7 +13,7 @@ import (
 
 // Ingester defines a Kafka ingester.
 type Ingester struct {
-	consumer kafka.Consumer
+	consumer *kafka.Consumer
 	topic    string
 }
 
@@ -41,11 +42,12 @@ func (i *Ingester) Ingest(ctx context.Context) (chan model.RatingEvent, error) {
 		for {
 			select {
 			case <-ctx.Done():
+				log.Println("Received a done signal, closing the consumer")
 				close(ch)
 				i.consumer.Close()
 			default:
 			}
-			msg, err := i.consumer.ReadMessage(-1)
+			msg, err := i.consumer.ReadMessage(10 * time.Second)
 			if err != nil {
 				fmt.Println("Consumer error: " + err.Error())
 				continue

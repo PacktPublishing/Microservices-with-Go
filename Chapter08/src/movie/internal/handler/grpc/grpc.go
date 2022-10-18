@@ -33,14 +33,10 @@ func (h *Handler) GetMovieDetails(ctx context.Context, req *gen.GetMovieDetailsR
 	} else if err != nil {
 		return nil, status.Errorf(codes.Internal, err.Error())
 	}
-	var rating float64
-	if m.Rating != nil {
-		rating = *m.Rating
-	}
 	return &gen.GetMovieDetailsResponse{
 		MovieDetails: &gen.MovieDetails{
 			Metadata: model.MetadataToProto(&m.Metadata),
-			Rating:  rating,
+			Rating:   *m.Rating,
 		},
 	}, nil
 }

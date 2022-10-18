@@ -2,19 +2,20 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"flag"
+	"fmt"
 	"log"
 	"net"
 	"time"
 
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 	"movieexample.com/gen"
+	"movieexample.com/pkg/discovery"
+	"movieexample.com/pkg/discovery/consul"
 	"movieexample.com/rating/internal/controller/rating"
 	grpchandler "movieexample.com/rating/internal/handler/grpc"
 	"movieexample.com/rating/internal/repository/memory"
-	"movieexample.com/pkg/discovery"
-	"movieexample.com/pkg/discovery/consul"
 )
 
 const serviceName = "rating"
@@ -50,6 +51,7 @@ func main() {
 		log.Fatalf("failed to listen: %v", err)
 	}
 	srv := grpc.NewServer()
+	reflection.Register(srv)
 	gen.RegisterRatingServiceServer(srv, h)
 	if err := srv.Serve(lis); err != nil {
 		panic(err)

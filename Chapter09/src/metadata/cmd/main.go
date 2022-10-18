@@ -9,6 +9,7 @@ import (
 	"os"
 
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 	"movieexample.com/gen"
 	"movieexample.com/metadata/internal/controller/metadata"
 	grpchandler "movieexample.com/metadata/internal/handler/grpc"

@@ -8,6 +8,7 @@ import (
 	"net"
 
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 	"movieexample.com/gen"
 	"movieexample.com/movie/internal/controller/movie"
 	metadatagateway "movieexample.com/movie/internal/gateway/metadata/grpc"

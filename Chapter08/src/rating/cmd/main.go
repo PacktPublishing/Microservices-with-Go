@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 	"movieexample.com/gen"
 	"movieexample.com/rating/internal/controller/rating"
 	grpchandler "movieexample.com/rating/internal/handler/grpc"

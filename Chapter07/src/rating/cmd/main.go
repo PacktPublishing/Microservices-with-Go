@@ -2,34 +2,28 @@ package main
 
 import (
 	"context"
+	"flag"
 	"fmt"
 	"log"
 	"net"
-	"os"
 	"time"
 
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 	"movieexample.com/gen"
-	"movieexample.com/rating/internal/controller/rating"
-	grpchandler "movieexample.com/rating/internal/handler/grpc"
-	"movieexample.com/rating/internal/repository/memory"
 	"movieexample.com/pkg/discovery"
 	"movieexample.com/pkg/discovery/consul"
-	"gopkg.in/yaml.v3"
+	"movieexample.com/rating/internal/controller/rating"
+	grpchandler "movieexample.com/rating/internal/handler/grpc"
+	"movieexample.com/rating/internal/repository/mysql"
 )
 
 const serviceName = "rating"
 
 func main() {
-	f, err := os.Open("base.yaml")
-	if err != nil {
-		panic(err)
-	}
-	var cfg config
-	if err := yaml.NewDecoder(f).Decode(&cfg); err != nil {
-		panic(err)
-	}
-	port := cfg.API.Port
+	var port int
+	flag.IntVar(&port, "port", 8082, "API handler port")
+	flag.Parse()
 	log.Printf("Starting the rating service on port %d", port)
 	registry, err := consul.NewRegistry("localhost:8500")
 	if err != nil {
@@ -49,7 +43,10 @@ func main() {
 		}
 	}()
 	defer registry.Deregister(ctx, instanceID, serviceName)
-	repo := memory.New()
+	repo, err := mysql.New()
+	if err != nil {
+		panic(err)
+	}
 	ctrl := rating.New(repo, nil)
 	h := grpchandler.New(ctrl)
 	lis, err := net.Listen("tcp", fmt.Sprintf("localhost:%v", port))
@@ -57,6 +54,7 @@ func main() {
 		log.Fatalf("failed to listen: %v", err)
 	}
 	srv := grpc.NewServer()
+	reflection.Register(srv)
 	gen.RegisterRatingServiceServer(srv, h)
 	if err := srv.Serve(lis); err != nil {
 		panic(err)

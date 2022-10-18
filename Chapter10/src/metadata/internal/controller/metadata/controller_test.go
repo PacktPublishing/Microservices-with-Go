@@ -1,59 +1,53 @@
 package metadata
- 
+
 import (
-   "context"
-   "errors"
-   "testing"
- 
-   "github.com/golang/mock/gomock"
-   gen "movieexample.com/gen/mock/metadata/repository"
-   "movieexample.com/metadata/internal/repository"   
-   "movieexample.com/metadata/pkg/model"
+	"context"
+	"errors"
+	"testing"
+
+	"github.com/golang/mock/gomock"
+	"github.com/stretchr/testify/assert"
+	gen "movieexample.com/gen/mock/metadata/repository"
+	"movieexample.com/metadata/internal/repository"
+	"movieexample.com/metadata/pkg/model"
 )
- 
-func TestGetErrNotFound(t *testing.T) {
-   ctrl := gomock.NewController(t)
-   defer ctrl.Finish()
-   repoMock := gen.NewMockmetadataRepository(ctrl)
-   c := New(repoMock)
-   ctx := context.Background()
-   id := "id"
-   repoMock.EXPECT().Get(ctx, id).Return(nil, repository.ErrNotFound)
-   _, err := c.Get(ctx, id)
-   if got, want := err, ErrNotFound; got != want {
-       t.Errorf("Get: got %v, want %v", got, want)
-   }
-}
 
-func TestGetUnexpectedErr(t *testing.T) {
-   ctrl := gomock.NewController(t)
-   defer ctrl.Finish()
-   repoMock := gen.NewMockmetadataRepository(ctrl)
-   c := New(repoMock)
-   ctx := context.Background()
-   id := "id"
-   repoErr := errors.New("unexpected error")
-   repoMock.EXPECT().Get(ctx, id).Return(nil, repoErr)
-   _, err := c.Get(ctx, id)
-   if !errors.Is(err, repoErr) {
-       t.Errorf("Get: got %v want %v", err, repoErr)
-   }
-}
-
-func TestGetSuccess(t *testing.T) {
-   ctrl := gomock.NewController(t)
-   defer ctrl.Finish()
-   repoMock := gen.NewMockmetadataRepository(ctrl)
-   c := New(repoMock)
-   ctx := context.Background()
-   id := "id"
-   m := &model.Metadata{}
-   repoMock.EXPECT().Get(ctx, id).Return(m, nil)
-   res, err := c.Get(ctx, id)
-   if err != nil {
-       t.Errorf("Get: got %v, want %v", err, nil)
-   }
-   if got, want := res, m; got != want {
-       t.Errorf("Get: got %v, want %v", got, want)
-   }
+func TestController(t *testing.T) {
+	tests := []struct {
+		name       string
+		expRepoRes *model.Metadata
+		expRepoErr error
+		wantRes    *model.Metadata
+		wantErr    error
+	}{
+		{
+			name:       "not found",
+			expRepoErr: repository.ErrNotFound,
+			wantErr:    ErrNotFound,
+		},
+		{
+			name:       "unexpected error",
+			expRepoErr: errors.New("unexpected error"),
+			wantErr:    errors.New("unexpected error"),
+		},
+		{
+			name:       "success",
+			expRepoRes: &model.Metadata{},
+			wantRes:    &model.Metadata{},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			ctrl := gomock.NewController(t)
+			defer ctrl.Finish()
+			repoMock := gen.NewMockmetadataRepository(ctrl)
+			c := New(repoMock)
+			ctx := context.Background()
+			id := "id"
+			repoMock.EXPECT().Get(ctx, id).Return(tt.expRepoRes, tt.expRepoErr)
+			res, err := c.Get(ctx, id)
+			assert.Equal(t, tt.wantRes, res, tt.name)
+			assert.Equal(t, tt.wantErr, err, tt.name)
+		})
+	}
 }
