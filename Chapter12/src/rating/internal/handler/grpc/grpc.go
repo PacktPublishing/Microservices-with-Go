@@ -17,7 +17,7 @@ type Handler struct {
 	ctrl *rating.Controller
 }
 
-// New creates a new movie metadata gRPC handler.
+// New creates a new rating gRPC handler.
 func New(ctrl *rating.Controller) *Handler {
 	return &Handler{ctrl: ctrl}
 }

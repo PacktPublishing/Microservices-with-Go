@@ -30,7 +30,8 @@ message PutMetadataRequest {
     Metadata metadata = 1;
 }
 
-message PutMetadataResponse {}
+message PutMetadataResponse {
+}
 
 service RatingService {
     rpc GetAggregatedRating(GetAggregatedRatingRequest) returns (GetAggregatedRatingResponse);
