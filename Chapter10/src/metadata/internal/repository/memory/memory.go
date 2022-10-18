@@ -20,7 +20,7 @@ func New() *Repository {
 }
 
 // Get retrieves movie metadata for by movie id.
-func (r *Repository) Get(ctx context.Context, id string) (*model.Metadata, error) {
+func (r *Repository) Get(_ context.Context, id string) (*model.Metadata, error) {
 	r.RLock()
 	defer r.RUnlock()
 	m, ok := r.data[id]
@@ -31,7 +31,7 @@ func (r *Repository) Get(ctx context.Context, id string) (*model.Metadata, error
 }
 
 // Put adds movie metadata for a given movie id.
-func (r *Repository) Put(ctx context.Context, id string, metadata *model.Metadata) error {
+func (r *Repository) Put(_ context.Context, id string, metadata *model.Metadata) error {
 	r.Lock()
 	defer r.Unlock()
 	r.data[id] = metadata
