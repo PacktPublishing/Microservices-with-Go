@@ -53,7 +53,7 @@ With the following software and hardware list you can run all code files present
 | 1-13 | Jaeger | Windows, Mac OS X, and Linux (Any) |
 | 1-13 | Graphviz | Windows, Mac OS X, and Linux (Any) |
 
-We also provide a PDF file that has color images of the screenshots/diagrams used in this book. [Click here to download it](https://github.com/PacktPublishing/microservices-with-go).
+We also provide a PDF file that has color images of the screenshots/diagrams used in this book. [Click here to download it](https://packt.link/1fb2C).
 
 ### Related products
 * Go for DevOps [[Packt]](https://www.packtpub.com/product/go-for-devops/9781801818896?utm_source=github&utm_medium=repository&utm_campaign=9781801818896) [[Amazon]](https://www.amazon.com/dp/1801818894)
