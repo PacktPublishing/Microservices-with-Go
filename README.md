@@ -64,3 +64,8 @@ We also provide a PDF file that has color images of the screenshots/diagrams use
 ## Get to Know the Author
 **Alexander Shuiskov**
 Senior Software Engineer II at Uber. He carries immense experience in Distributed Systems, Microservices, and Observability. He has completed his MSc in Computer Science and after which he has worked in prominent companies like eBay, Booking, and so on. He has led the development of Uber alerting and contributed to 25 Uber services. He was also an active contributor to the development of the eBay Ad platform.
+
+### Download a free PDF
+
+ <i>If you have already purchased a print or Kindle version of this book, you can get a DRM-free PDF version at no cost.<br>Simply click on the link to claim your free PDF.</i>
+<p align="center"> <a href="https://packt.link/free-ebook/9781804617007">https://packt.link/free-ebook/9781804617007 </a> </p>
