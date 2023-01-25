@@ -1,6 +1,3 @@
-
-
-
 # Microservices with Go
 
 <a href="https://www.packtpub.com/product/microservices-with-go/9781804617007"><img src="https://m.media-amazon.com/images/I/412x+RC-FJL._SX403_BO1,204,203,200_.jpg" alt="Microservices with Go" height="256px" align="right"></a>
@@ -23,6 +20,12 @@ If you feel this book is for you, get your [copy](https://www.amazon.com/dp/1804
 
 <a href="https://www.packtpub.com/?utm_source=github&utm_medium=banner&utm_campaign=GitHubBanner"><img src="https://raw.githubusercontent.com/PacktPublishing/GitHub/master/GitHub.png" 
 alt="https://www.packtpub.com/" border="5" /></a>
+
+## Errata
+
+* Page 39: In the Handler section, the import statement "movieexample.com/rating/internal/controller" must be read as "movieexample.com/rating/internal/controller/rating".
+* Page 64-67: The types "serviceName" and "instanceID" are defined, but these same names are also used as method parameters, causing a naming clash as the methods Register, Deregister, ReportHealthyState and ServiceAddresses also access the serviceAddrs slice which uses serviceName and instanceID as types also.
+* Page 69: The for loop on this page must be read as " for _, e := range entries {        res = append(res, fmt.Sprintf("%s:%d", e.Service.Address, e.Service.Port)))    }". That is "res = append(res, " is repeated twice which must be ignored.
 
 ## Instructions and Navigations
 All of the code is organized into folders. For example, Chapter02.
