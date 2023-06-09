@@ -27,6 +27,15 @@ alt="https://www.packtpub.com/" border="5" /></a>
 * Page 64-67: The types "serviceName" and "instanceID" are defined, but these same names are also used as method parameters, causing a naming clash as the methods Register, Deregister, ReportHealthyState and ServiceAddresses also access the serviceAddrs slice which uses serviceName and instanceID as types also.
 * Page 69: The for loop on this page must be read as " for _, e := range entries {        res = append(res, fmt.Sprintf("%s:%d", e.Service.Address, e.Service.Port)))    }". That is "res = append(res, " is repeated twice which must be ignored.
 
+
+## Suggestion -- Chapter07: quick fixes for MySQL, grpcurl
+
+In case you are not able to follow along due to some steps being left out, please try these steps before chapter07 examples:
+* run ```CREATE DATABASE movieexample``` (you probably want to access the container instance to execute this command by using ```mysql -uroot -ppassword``` in Docker first)
+* run ```go install github.com/fullstorydev/grpcurl/cmd/grpcurl@latest``` to get grpcurl on your machine
+
+Suggested by our reader <b>jasonsalas</b> [here](https://github.com/PacktPublishing/Microservices-with-Go/issues/9).
+
 ## Instructions and Navigations
 All of the code is organized into folders. For example, Chapter02.
 
