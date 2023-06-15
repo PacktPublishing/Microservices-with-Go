@@ -45,6 +45,7 @@ func (i *Ingester) Ingest(ctx context.Context) (chan model.RatingEvent, error) {
 				log.Println("Received a done signal, closing the consumer")
 				close(ch)
 				i.consumer.Close()
+				return
 			default:
 			}
 			msg, err := i.consumer.ReadMessage(10 * time.Second)

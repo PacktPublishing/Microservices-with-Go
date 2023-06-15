@@ -42,6 +42,7 @@ func (i *Ingester) Ingest(ctx context.Context) (chan model.RatingEvent, error) {
 			case <-ctx.Done():
 				close(ch)
 				i.consumer.Close()
+				return
 			default:
 			}
 			msg, err := i.consumer.ReadMessage(-1)
