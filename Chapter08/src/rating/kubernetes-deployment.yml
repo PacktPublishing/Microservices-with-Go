@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: rating
-        image: ashuiskov/rating:1.0.3
+        image: rating:latest
         imagePullPolicy: IfNotPresent
         ports:
           - containerPort: 8082

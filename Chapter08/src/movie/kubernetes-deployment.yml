@@ -14,8 +14,8 @@ spec:
         app: movie
     spec:
       containers:
-      - name: metadata
-        image: ashuiskov/movie:1.0.0
+      - name: movie
+        image: movie:latest
         imagePullPolicy: IfNotPresent
         ports:
           - containerPort: 8083

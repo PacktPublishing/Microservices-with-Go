@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"rating/pkg/model"
 
 	"github.com/confluentinc/confluent-kafka-go/kafka"
 	"movieexample.com/rating/pkg/model"
@@ -12,7 +11,7 @@ import (
 
 // Ingester defines a Kafka ingester.
 type Ingester struct {
-	consumer kafka.Consumer
+	consumer *kafka.Consumer
 	topic    string
 }
 
@@ -32,6 +31,7 @@ func NewIngester(addr string, groupID string, topic string) (*Ingester, error) {
 // Ingest starts ingestion from Kafka and returns a channel containing rating events
 // representing the data consumed from the topic.
 func (i *Ingester) Ingest(ctx context.Context) (chan model.RatingEvent, error) {
+	fmt.Println("Starting Kafka ingester")
 	if err := i.consumer.SubscribeTopics([]string{i.topic}, nil); err != nil {
 		return nil, err
 	}

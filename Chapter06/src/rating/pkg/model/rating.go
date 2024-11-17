@@ -40,6 +40,6 @@ type RatingEventType string
 
 // Rating event types.
 const (
-	RatingEventTypePut    = "put"
-	RatingEventTypeDelete = "delete"
+	RatingEventTypePut    = RatingEventType("put")
+	RatingEventTypeDelete = RatingEventType("delete")
 )
