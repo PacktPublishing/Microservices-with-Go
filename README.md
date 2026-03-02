@@ -1,3 +1,5 @@
+<p align='center'><a href='https://www.eventbrite.com/e/ship-production-pytorch-system-in-a-day-train-optimize-deploy-workshop-tickets-1983348934052?aff=GitHub'><img src='https://static.packt-cdn.com/assets/images/packt+events/workshop_ashish_github.png'/></a></p>
+
 # Microservices with Go
 
 <a href="https://www.packtpub.com/product/microservices-with-go/9781804617007"><img src="https://m.media-amazon.com/images/I/412x+RC-FJL._SX403_BO1,204,203,200_.jpg" alt="Microservices with Go" height="256px" align="right"></a>
